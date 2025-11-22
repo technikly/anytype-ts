@@ -16,22 +16,30 @@
 			.wrapMenu { display: none; }
 		}
 
-		.listInline { display: flex; flex-direction: row; align-items: center; gap: 0px 2px; flex-wrap: wrap; }
-		.listInline {
-			.bullet { width: 4px; height: 4px; border-radius: 50%; background: var(--color-text-secondary); }
+                .listInline { display: flex; flex-direction: row; align-items: center; gap: 0px 2px; flex-wrap: wrap; }
+                .listInline {
+                        .bullet { width: 4px; height: 4px; border-radius: 50%; background: var(--color-text-secondary); }
 
-			.cell { white-space: nowrap; display: inline-flex; flex-direction: row; align-items: center; gap: 0px 2px; min-height: 28px; }
-			.cell.canEdit {
-				.cellContent {
-					.empty { display: inline; }
-				}
-			}
-			.cell:last-child .bullet { display: none; }
+                        .cell { white-space: nowrap; display: inline-flex; flex-direction: row; align-items: center; gap: 0px 2px; min-height: 28px; }
+                        .cell.backlinks { white-space: normal; align-items: flex-start; }
+                        .cell.backlinks {
+                                .cellContent { flex-direction: column; align-items: flex-start; gap: 8px; }
+                                .backlinksItems { display: flex; flex-direction: column; gap: 6px; width: 100%; }
+                                .backlinkItem { padding: 6px; border-radius: 6px; cursor: pointer; background: var(--color-shape-highlight-medium); }
+                                .backlinkName { color: var(--color-text-primary); }
+                                .backlinkSnippet { color: var(--color-text-secondary); @include text-small; margin-top: 2px; }
+                        }
+                        .cell.canEdit {
+                                .cellContent {
+                                        .empty { display: inline; }
+                                }
+                        }
+                        .cell:last-child .bullet { display: none; }
 
-			.cellContent { 
-				height: 100% ;display: flex; border-radius: 4px; vertical-align: top; padding: 0px 6px; transition: background $transitionCommon; 
-				cursor: default !important; 
-			}
+                        .cellContent { 
+                                height: 100% ;display: flex; border-radius: 4px; vertical-align: top; padding: 0px 6px; transition: background $transitionCommon; 
+                                cursor: default !important; 
+                        }
 			.cellContent.disabled { opacity: 1; }
 
 			.cellContent:not(.disabled):hover, .cellContent:not(.disabled).hover { background: var(--color-shape-highlight-medium); }
