@@ -328,31 +328,69 @@ const BlockFeatured = observer(class BlockFeatured extends React.Component<Props
 		);
 	};
 
-	renderLinks (relationKey: string, index: number) {
-		const { rootId } = this.props;
-		const object = this.getObject();
-		const id = Relation.cellId(PREFIX, relationKey, object.id);
-		const value = object[relationKey];
-		const options = Relation.getArrayValue(value).map(it => S.Detail.get(rootId, it, [])).filter(it => !it._empty_);
-		const l = options.length;
+		renderLinks (relationKey: string, index: number) {
+			const { rootId } = this.props;
+			const object = this.getObject();
+			const relation = S.Record.getRelationByKey(relationKey);
 
-		if (!l) {
-			return null;
+			if (!relation) {
+				return null;
+			};
+
+			const id = Relation.cellId(PREFIX, relationKey, object.id);
+			const value = object[relationKey];
+			const options = Relation.getArrayValue(value).map(it => S.Detail.get(rootId, it, [ 'name', 'snippet', 'layout', 'iconEmoji', 'iconImage' ], true)).filter(it => !it._empty_);
+			const l = options.length;
+
+			if (!l) {
+				return null;
+			};
+
+			if (relationKey == 'backlinks') {
+				return (
+					<span className="cell backlinks" key={index} >
+						<div
+							id={id}
+							className="cellContent"
+						>
+							<div className="backlinksTitle">{relation.name}</div>
+							<div className="backlinksItems">
+								{options.map(item => (
+									<div
+										key={item.id}
+										className="backlinkItem"
+										onClick={e => {
+											e.preventDefault();
+											e.stopPropagation();
+											U.Object.openAuto(item);
+										}}
+									>
+											<div className="backlinkName">{U.Object.name(item)}</div>
+											{item.snippet ? (
+												<div className="backlinkSnippet">{item.snippet}</div>
+											) : ''}
+									</div>
+								))}
+							</div>
+						</div>
+						<div className="bullet" />
+					</span>
+				);
+			};
+
+			return (
+				<span className="cell" key={index} >
+					<div 
+						id={id} 
+						className="cellContent"
+						onClick={e => this.onLinks(e, relationKey)}
+					>
+						{`${l} ${U.Common.plural(l, translate(U.Common.toCamelCase([ 'plural', relationKey ].join('-'))))}`}
+					</div>
+					<div className="bullet" />
+				</span>
+			);
 		};
-
-		return (
-			<span className="cell" key={index} >
-				<div 
-					id={id} 
-					className="cellContent"
-					onClick={e => this.onLinks(e, relationKey)}
-				>
-					{`${l} ${U.Common.plural(l, translate(U.Common.toCamelCase([ 'plural', relationKey ].join('-'))))}`}
-				</div>
-				<div className="bullet" />
-			</span>
-		);
-	};
 
 	getObject () {
 		const keys = [ 'type', 'setOf', 'featuredRelations', 'layout' ].concat(this.getItems().map(it => it.relationKey));
